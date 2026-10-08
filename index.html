@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Net Speed Test - Free, Accurate Broadband & Wi-Fi Speed Benchmark</title>
+  <meta name="title" content="Net Speed Test - Free, Accurate Broadband & Wi-Fi Speed Benchmark">
+  <meta name="description" content="Test your internet speed with Net Speed. Fast, free, HTML5-based benchmark to measure download, upload, ping, and jitter accurately without ads or third-party tracking.">
+  <meta name="keywords" content="net speed, net speed test, internet speed test, wifi speed test, broadband speed test, ping test, jitter test, bandwidth benchmark, check upload download speed, fiber test">
+  <meta name="author" content="Sachin Kumar">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="theme-color" content="#01030e">
+  <link rel="canonical" href="https://yoursite.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yoursite.com/">
+  <meta property="og:title" content="Net Speed Test - Clean & Accurate Speed Benchmark">
+  <meta property="og:description" content="Check your download speed, upload bandwidth, ping, and jitter in real-time with zero bloat.">
+  <meta property="og:site_name" content="Net Speed">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Net Speed Test - Real-Time Bandwidth Engine">
+  <meta name="twitter:description" content="Test your broadband and mobile internet speeds with high-precision client-side telemetry.">
+
+  <!-- Schema.org JSON-LD (WebSite, WebApplication, FAQPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://yoursite.com/#webapp",
+        "name": "Net Speed Test",
+        "url": "https://yoursite.com/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All modern browsers (Chrome, Firefox, Safari, Edge)",
+        "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "An ultra-fast client-side internet throughput benchmark testing download, upload, latency, and jitter."
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://yoursite.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does this speed test measure my bandwidth?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The test measures network throughput by streaming binary chunks over HTTPS across multiple concurrent threads, calculating the data transferred against precise millisecond timestamps."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between Ping and Jitter?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ping (latency) measures the round-trip transit time in milliseconds from your device to the server. Jitter measures the variance and inconsistency in latency over time, which affects VoIP and real-time gaming."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a good internet speed for streaming and gaming?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For 4K UHD streaming, a stable download speed of 25 Mbps is recommended. For online gaming, a ping under 40 ms and jitter under 10 ms is ideal."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            appBg: '#01030e',
+            cardBg: '#040a1f',
+            borderGray: '#151f42',
+            textGray: '#8b9bb4',
+            accent: '#62A814',
+            brandNavy: '#00053D'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #01030e;
+      color: #eaeaea;
+    }
+    .minimal-card {
+      background-color: #040a1f;
+      border: 1px solid #151f42;
+      border-radius: 14px;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #151f42; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #62A814; }
+    .gauge-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white font-sans antialiased">
+
+  <!-- Header -->
+  <header class="w-full border-b border-borderGray bg-appBg/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-5 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-lg bg-brandNavy border border-borderGray text-accent flex items-center justify-center font-bold">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <span class="text-lg font-extrabold tracking-tight text-white">NET<span class="text-accent">SPEED</span></span>
+      </div>
+
+      <nav class="flex items-center space-x-5 text-xs text-textGray font-medium">
+        <a href="#howItWorks" class="hover:text-accent transition hidden sm:inline">Guide</a>
+        <a href="#faqSection" class="hover:text-accent transition hidden sm:inline">FAQ</a>
+        <a href="#historySection" class="hover:text-accent transition">History</a>
+        <button id="soundToggleBtn" aria-label="Toggle Sound" class="flex items-center space-x-1 hover:text-accent transition">
+          <span id="soundText">Sound: On</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-6xl w-full mx-auto px-5 py-8 flex flex-col gap-8">
+
+    <!-- SEO Heading Hero -->
+    <section class="text-center max-w-2xl mx-auto">
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+        Test Your <span class="text-accent">Internet Speed</span> Instantly
+      </h1>
+      <p class="text-xs sm:text-sm text-textGray mt-2">
+        Accurate, private, real-time download, upload, ping, and jitter benchmarking engine.
+      </p>
+    </section>
+    
+    <!-- Telemetry Bar -->
+    <section aria-label="Network Telemetry" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+      <div class="minimal-card p-3.5">
+        <div class="text-textGray text-[11px] font-semibold uppercase tracking-wider mb-1">IP Address</div>
+        <div id="ipDisplay" class="font-mono text-xs sm:text-sm font-medium truncate">Detecting...</div>
+      </div>
+      <div class="minimal-card p-3.5">
+        <div class="text-textGray text-[11px] font-semibold uppercase tracking-wider mb-1">Provider (ISP)</div>
+        <div id="ispDisplay" class="text-xs sm:text-sm font-medium truncate">Detecting...</div>
+      </div>
+      <div class="minimal-card p-3.5">
+        <div class="text-textGray text-[11px] font-semibold uppercase tracking-wider mb-1">Location</div>
+        <div id="locationDisplay" class="text-xs sm:text-sm font-medium truncate">Detecting...</div>
+      </div>
+      <div class="minimal-card p-3.5">
+        <div class="text-textGray text-[11px] font-semibold uppercase tracking-wider mb-1">Connection</div>
+        <div id="connTypeDisplay" class="text-xs sm:text-sm font-medium text-accent truncate">Broadband / Wi-Fi</div>
+      </div>
+    </section>
+
+    <!-- Speed Benchmarking Hub -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+      
+      <!-- Metrics Left -->
+      <div class="flex flex-col gap-3 justify-center order-2 lg:order-1">
+        <!-- Ping & Jitter Quick Cards -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="minimal-card p-4 flex flex-col justify-center items-center">
+            <span class="text-textGray text-[10px] font-semibold uppercase tracking-wider mb-1">Ping Latency</span>
+            <div class="flex items-baseline space-x-1">
+              <span id="pingValue" class="text-2xl font-bold font-mono text-white">--</span>
+              <span class="text-[10px] text-textGray">ms</span>
+            </div>
+          </div>
+          <div class="minimal-card p-4 flex flex-col justify-center items-center">
+            <span class="text-textGray text-[10px] font-semibold uppercase tracking-wider mb-1">Jitter Delay</span>
+            <div class="flex items-baseline space-x-1">
+              <span id="jitterValue" class="text-2xl font-bold font-mono text-white">--</span>
+              <span class="text-[10px] text-textGray">ms</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Download Card -->
+        <div class="minimal-card p-5 flex flex-col justify-center items-center border-l-4 border-l-accent">
+          <span class="text-textGray text-[10px] font-bold uppercase tracking-widest mb-1">Download Bandwidth</span>
+          <div class="flex items-baseline space-x-1.5">
+            <span id="downloadSummaryValue" class="text-4xl font-extrabold tracking-tight text-white font-mono">--</span>
+            <span class="text-xs text-textGray font-mono font-medium">Mbps</span>
+          </div>
+        </div>
+
+        <!-- Upload Card -->
+        <div class="minimal-card p-5 flex flex-col justify-center items-center border-l-4 border-l-borderGray">
+          <span class="text-textGray text-[10px] font-bold uppercase tracking-widest mb-1">Upload Bandwidth</span>
+          <div class="flex items-baseline space-x-1.5">
+            <span id="uploadSummaryValue" class="text-4xl font-extrabold tracking-tight text-white font-mono">--</span>
+            <span class="text-xs text-textGray font-mono font-medium">Mbps</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Gauge -->
+      <div class="flex flex-col items-center justify-center order-1 lg:order-2 py-4">
+        <div class="gauge-wrapper flex items-center justify-center">
+          <canvas id="gaugeCanvas" class="w-full h-full absolute z-10" width="300" height="300"></canvas>
+          <div class="z-20 flex flex-col items-center justify-center transform -translate-y-2 text-center">
+            <span id="phaseIndicator" class="text-[10px] uppercase tracking-widest text-accent font-bold mb-1">READY</span>
+            <span id="centerSpeedValue" class="font-mono text-5xl font-black tracking-tight text-white">0.0</span>
+            <span class="text-[11px] text-textGray font-mono">Mbps</span>
+            <span id="progressPercent" class="text-xs text-textGray font-mono mt-1.5">0%</span>
+          </div>
+        </div>
+
+        <button id="startTestBtn" class="mt-6 px-10 py-3 rounded-full bg-accent text-white font-bold tracking-wider text-sm hover:opacity-90 active:scale-95 transition-all flex items-center space-x-2 shadow-lg shadow-accent/20 cursor-pointer">
+          <svg id="btnIcon" class="w-4 h-4 text-white animate-spin hidden" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="btnText">START TEST</span>
+        </button>
+        <p id="statusMsg" class="mt-3 text-xs text-textGray">Click start to initiate network benchmark</p>
+      </div>
+
+      <!-- Real-Time Graph & Verdict -->
+      <div class="minimal-card p-5 flex flex-col justify-between order-3">
+        <div>
+          <div class="text-[11px] text-textGray font-bold uppercase tracking-wider mb-3 flex justify-between items-center">
+            <span>Throughput Live Waveform</span>
+            <span id="liveBadge" class="text-[9px] border border-borderGray text-accent px-1.5 py-0.5 rounded bg-brandNavy/50">STANDBY</span>
+          </div>
+          <div class="w-full h-32 relative overflow-hidden flex items-center justify-center bg-appBg/50 rounded-lg border border-borderGray/40">
+            <canvas id="graphCanvas" class="w-full h-full block" width="320" height="120"></canvas>
+            <div id="chartPlaceholder" class="absolute text-xs text-borderGray">Waiting for test stream...</div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-borderGray">
+          <div class="text-xs text-textGray uppercase tracking-wider mb-1">Network Verdict</div>
+          <div id="verdictRating" class="text-base font-semibold text-white">Standing By</div>
+          <p id="verdictDescription" class="text-xs text-textGray mt-1 leading-relaxed">
+            Run the benchmark to calculate latency health, packet delivery, and streaming readiness.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- History Logs -->
+    <section id="historySection" class="minimal-card p-5 sm:p-6">
+      <div class="flex flex-wrap gap-2 justify-between items-center mb-4">
+        <div>
+          <h2 class="text-sm font-bold text-white uppercase tracking-wider">Benchmark History</h2>
+          <p class="text-xs text-textGray">Saved locally in your browser storage.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="exportCsvBtn" class="text-xs text-accent hover:underline border border-accent/30 px-2.5 py-1 rounded">Export CSV</button>
+          <button id="clearHistoryBtn" class="text-xs text-red-400 hover:text-red-300 border border-red-500/20 px-2.5 py-1 rounded">Clear</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm font-sans" aria-label="Test History Table">
+          <thead>
+            <tr class="text-[10px] text-textGray uppercase tracking-wider border-b border-borderGray">
+              <th class="pb-2 px-2 font-semibold">Timestamp</th>
+              <th class="pb-2 px-2 font-semibold">Ping</th>
+              <th class="pb-2 px-2 font-semibold">Download</th>
+              <th class="pb-2 px-2 font-semibold">Upload</th>
+              <th class="pb-2 px-2 font-semibold">Rating</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-borderGray text-xs">
+            <!-- Dynamic logs -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- High-Value SEO Content Section -->
+    <section id="howItWorks" class="border-t border-borderGray pt-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="minimal-card p-5">
+          <h3 class="text-white text-sm font-semibold mb-2 flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-accent"></span>
+            <span>Download Speed</span>
+          </h3>
+          <p class="text-xs text-textGray leading-relaxed">
+            Measures how quickly your connection fetches data from web servers to your machine. Critical for high-resolution video streaming, large file downloads, and browsing responsiveness.
+          </p>
+        </div>
+        <div class="minimal-card p-5">
+          <h3 class="text-white text-sm font-semibold mb-2 flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-accent"></span>
+            <span>Upload Speed</span>
+          </h3>
+          <p class="text-xs text-textGray leading-relaxed">
+            Measures the speed at which you send data outward. Vital for Zoom/Teams video conferencing, live streaming on YouTube/Twitch, cloud backups, and sending email attachments.
+          </p>
+        </div>
+        <div class="minimal-card p-5">
+          <h3 class="text-white text-sm font-semibold mb-2 flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-accent"></span>
+            <span>Latency & Jitter</span>
+          </h3>
+          <p class="text-xs text-textGray leading-relaxed">
+            Ping indicates response time in milliseconds (ms). Jitter represents the consistency of that response time. Lower ping and minimal jitter prevent packet drops and gaming lag.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion for SERP Rich Snippets -->
+    <section id="faqSection" class="border-t border-borderGray pt-8 pb-4">
+      <h2 class="text-lg font-bold text-white mb-4">Frequently Asked Questions</h2>
+      <div class="space-y-3">
+        <details class="minimal-card p-4 group cursor-pointer">
+          <summary class="text-xs font-semibold text-white flex justify-between items-center list-none">
+            <span>Why does my tested speed differ from my ISP subscription plan?</span>
+            <span class="text-accent group-open:rotate-180 transition-transform">&#9662;</span>
+          </summary>
+          <p class="text-xs text-textGray mt-3 leading-relaxed">
+            Internet Service Providers advertise maximum "up to" theoretical speeds. Real-world speeds can be affected by Wi-Fi interference, router hardware limits, background downloads, or congestion during peak network hours.
+          </p>
+        </details>
+
+        <details class="minimal-card p-4 group cursor-pointer">
+          <summary class="text-xs font-semibold text-white flex justify-between items-center list-none">
+            <span>What is the difference between Megabits (Mbps) and Megabytes (MB/s)?</span>
+            <summary class="hidden"></summary>
+            <span class="text-accent group-open:rotate-180 transition-transform">&#9662;</span>
+          </summary>
+          <p class="text-xs text-textGray mt-3 leading-relaxed">
+            There are 8 bits in a byte. Internet speeds are universally measured in <strong>Megabits per second (Mbps)</strong>, while file download sizes on your computer are measured in <strong>Megabytes (MB)</strong>. A 100 Mbps line downloads files at roughly 12.5 MB/s.
+          </p>
+        </details>
+
+        <details class="minimal-card p-4 group cursor-pointer">
+          <summary class="text-xs font-semibold text-white flex justify-between items-center list-none">
+            <span>Does this speed test store or log my personal data?</span>
+            <span class="text-accent group-open:rotate-180 transition-transform">&#9662;</span>
+          </summary>
+          <p class="text-xs text-textGray mt-3 leading-relaxed">
+            No. The engine runs completely client-side in your web browser. Benchmark logs are stored only in your local browser storage (<code class="text-accent font-mono">localStorage</code>) and can be cleared at any time.
+          </p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-borderGray bg-brandNavy/20 py-6 mt-10">
+    <div class="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between text-xs text-textGray gap-2">
+      <div>Developed by <span class="text-white font-medium">Sachin Kumar</span> &bull; Client-Side Speed Engine</div>
+      <div class="flex items-center space-x-3 text-[11px]">
+        <span>Zero Cookies</span>
+        <span>&bull;</span>
+        <span>HTML5 Web Benchmark</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-cardBg border border-accent/40 px-4 py-2.5 rounded-lg shadow-xl shadow-brandNavy/60 text-xs flex items-center space-x-2 text-white">
+      <span id="toastMsg">Message</span>
+    </div>
+  </div>
+
+  <!-- Audio Synthesizer -->
+  <script>
+    class MinimalAudio {
+      constructor() { this.ctx = null; this.muted = false; }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      }
+      playTone(freq = 600, duration = 0.1) {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      }
+      toggleMute() {
+        this.muted = !this.muted;
+        return this.muted;
+      }
+    }
+
+    const sound = new MinimalAudio();
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundText = document.getElementById('soundText');
+
+    soundToggleBtn.addEventListener('click', () => {
+      const isMuted = sound.toggleMute();
+      soundText.textContent = isMuted ? 'Sound: Off' : 'Sound: On';
+    });
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3200);
+    }
+  </script>
+
+  <!-- Gauge & Waveform Canvas Graphics -->
+  <script>
+    const gaugeCanvas = document.getElementById('gaugeCanvas');
+    const gaugeCtx = gaugeCanvas.getContext('2d');
+    let currentGaugeValue = 0;
+    let targetGaugeValue = 0;
+    let dynamicGaugeCeiling = 100;
+
+    function drawGauge(value) {
+      const w = gaugeCanvas.width;
+      const h = gaugeCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2 + 10;
+      const radius = 115;
+
+      gaugeCtx.clearRect(0, 0, w, h);
+
+      const startAngle = 0.75 * Math.PI;
+      const endAngle = 2.25 * Math.PI;
+      const sweepAngle = endAngle - startAngle;
+
+      // Outer track
+      gaugeCtx.beginPath();
+      gaugeCtx.arc(cx, cy, radius, startAngle, endAngle);
+      gaugeCtx.strokeStyle = '#151f42';
+      gaugeCtx.lineWidth = 8;
+      gaugeCtx.lineCap = 'round';
+      gaugeCtx.stroke();
+
+      // Active speed arc
+      if (value > dynamicGaugeCeiling * 0.8) {
+        dynamicGaugeCeiling = Math.max(dynamicGaugeCeiling * 1.5, Math.ceil(value / 100) * 100);
+      }
+      const ratio = Math.min(Math.max(value, 0), dynamicGaugeCeiling) / dynamicGaugeCeiling;
+
+      if (ratio > 0.005) {
+        const currentAngle = startAngle + ratio * sweepAngle;
+        gaugeCtx.beginPath();
+        gaugeCtx.arc(cx, cy, radius, startAngle, currentAngle);
+        gaugeCtx.strokeStyle = '#62A814';
+        gaugeCtx.lineWidth = 8;
+        gaugeCtx.lineCap = 'round';
+        gaugeCtx.stroke();
+      }
+    }
+
+    function updateGaugeLoop() {
+      const diff = targetGaugeValue - currentGaugeValue;
+      if (Math.abs(diff) > 0.05) currentGaugeValue += diff * 0.25;
+      else currentGaugeValue = targetGaugeValue;
+      drawGauge(currentGaugeValue);
+      requestAnimationFrame(updateGaugeLoop);
+    }
+    updateGaugeLoop();
+
+    /* Real-Time Throughput Graph */
+    const graphCanvas = document.getElementById('graphCanvas');
+    const graphCtx = graphCanvas.getContext('2d');
+    let bandwidthData = [];
+
+    function resetBandwidthGraph() {
+      bandwidthData = [];
+      graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+      document.getElementById('chartPlaceholder').style.display = 'block';
+    }
+
+    function addGraphPoint(mbps) {
+      document.getElementById('chartPlaceholder').style.display = 'none';
+      bandwidthData.push(mbps);
+      if (bandwidthData.length > 40) bandwidthData.shift();
+      renderBandwidthGraph();
+    }
+
+    function renderBandwidthGraph() {
+      const w = graphCanvas.width;
+      const h = graphCanvas.height;
+      graphCtx.clearRect(0, 0, w, h);
+      if (bandwidthData.length < 2) return;
+
+      const maxVal = Math.max(...bandwidthData, 20) * 1.25;
+      const stepX = w / 39;
+      const startIdx = 40 - bandwidthData.length;
+
+      graphCtx.beginPath();
+      for (let i = 0; i < bandwidthData.length; i++) {
+        const x = (startIdx + i) * stepX;
+        const y = h - (bandwidthData[i] / maxVal) * (h - 10) - 5;
+        if (i === 0) graphCtx.moveTo(x, y);
+        else graphCtx.lineTo(x, y);
+      }
+      graphCtx.strokeStyle = '#62A814';
+      graphCtx.lineWidth = 2.5;
+      graphCtx.lineJoin = 'round';
+      graphCtx.stroke();
+    }
+  </script>
+
+  <!-- Network Telemetry & IP Lookup -->
+  <script>
+    async function loadNetworkTelemetry() {
+      if ('connection' in navigator) {
+        const c = navigator.connection;
+        if (c && c.effectiveType) {
+          document.getElementById('connTypeDisplay').textContent = `${c.effectiveType.toUpperCase()} (${c.type || 'Direct'})`;
+        }
+      }
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch('https://ipwho.is/', { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const data = await res.json();
+        if (data && data.success) {
+          document.getElementById('ipDisplay').textContent = data.ip;
+          document.getElementById('ispDisplay').textContent = data.connection?.isp || data.connection?.org || 'Broadband ISP';
+          document.getElementById('locationDisplay').textContent = `${data.city}, ${data.country_code}`;
+        }
+      } catch (err) {
+        document.getElementById('ipDisplay').textContent = 'Direct IP';
+        document.getElementById('ispDisplay').textContent = 'Local Gateway';
+        document.getElementById('locationDisplay').textContent = 'Detected Locally';
+      }
+    }
+    loadNetworkTelemetry();
+  </script>
+
+  <!-- Main Speed Engine -->
+  <script>
+    const BENCHMARK_CONFIG = {
+      downloadEndpoints: [
+        'https://speed.cloudflare.com/__down?bytes=25000000',
+        'https://speed.cloudflare.com/__down?bytes=50000000'
+      ],
+      pingEndpoint: 'https://speed.cloudflare.com/__down?bytes=0',
+      uploadEndpoint: 'https://speed.cloudflare.com/__up',
+      testDurationMs: 4500
+    };
+
+    const startTestBtn = document.getElementById('startTestBtn');
+    const btnText = document.getElementById('btnText');
+    const btnIcon = document.getElementById('btnIcon');
+    const statusMsg = document.getElementById('statusMsg');
+    const phaseIndicator = document.getElementById('phaseIndicator');
+    const centerSpeedValue = document.getElementById('centerSpeedValue');
+    const progressPercent = document.getElementById('progressPercent');
+    const liveBadge = document.getElementById('liveBadge');
+
+    let isTesting = false;
+    let abortController = null;
+
+    /* Ping & Jitter Benchmarking */
+    async function measurePingAndJitter(rounds = 6) {
+      const samples = [];
+      for (let i = 0; i < rounds; i++) {
+        if (abortController.signal.aborted) break;
+        const start = performance.now();
+        try {
+          await fetch(`${BENCHMARK_CONFIG.pingEndpoint}&cb=${Date.now()}_${i}`, {
+            method: 'HEAD',
+            cache: 'no-store',
+            signal: abortController.signal
+          });
+          const delta = performance.now() - start;
+          samples.push(delta);
+        } catch (e) {
+          // ignore dropped probe
+        }
+        await new Promise(r => setTimeout(r, 60));
+      }
+
+      if (samples.length === 0) return { ping: 0, jitter: 0 };
+      
+      const ping = samples.reduce((a, b) => a + b, 0) / samples.length;
+      let jitterSum = 0;
+      for (let i = 1; i < samples.length; i++) {
+        jitterSum += Math.abs(samples[i] - samples[i - 1]);
+      }
+      const jitter = samples.length > 1 ? jitterSum / (samples.length - 1) : 0;
+      return { ping, jitter };
+    }
+
+    /* Download Benchmarking */
+    async function measureDownloadSpeed(durationMs, onUpdate) {
+      const startTime = performance.now();
+      let totalBytes = 0;
+      let smoothedSpeed = 0;
+      const workers = [];
+
+      async function streamWorker(id) {
+        while (performance.now() - startTime < durationMs && !abortController.signal.aborted) {
+          if (!navigator.onLine) break;
+          try {
+            const url = `${BENCHMARK_CONFIG.downloadEndpoints[id % 2]}&w=${id}&cb=${Date.now()}`;
+            const res = await fetch(url, { cache: 'no-store', signal: abortController.signal });
+            const reader = res.body.getReader();
+            while (true) {
+              if (performance.now() - startTime >= durationMs || abortController.signal.aborted) {
+                reader.cancel();
+                break;
+              }
+              const { done, value } = await reader.read();
+              if (done) break;
+              if (value) totalBytes += value.length;
+            }
+          } catch (e) {
+            await new Promise(r => setTimeout(r, 80));
+          }
+        }
+      }
+
+      for (let i = 0; i < 4; i++) workers.push(streamWorker(i));
+
+      while (performance.now() - startTime < durationMs && !abortController.signal.aborted) {
+        await new Promise(r => setTimeout(r, 50));
+        const elapsedSec = (performance.now() - startTime) / 1000;
+        if (elapsedSec > 0.2) {
+          const rawMbps = (totalBytes * 8) / (elapsedSec * 1000000);
+          smoothedSpeed = smoothedSpeed === 0 ? rawMbps : (smoothedSpeed * 0.7 + rawMbps * 0.3);
+          onUpdate({
+            speed: smoothedSpeed,
+            progress: Math.min(100, Math.round((elapsedSec / (durationMs / 1000)) * 100))
+          });
+        }
+      }
+      await Promise.allSettled(workers);
+      return { final: smoothedSpeed };
+    }
+
+    /* Upload Benchmarking */
+    async function measureUploadSpeed(durationMs, onUpdate) {
+      const startTime = performance.now();
+      let totalBytesUploaded = 0;
+      let smoothedSpeed = 0;
+
+      // 2MB random binary payload
+      const chunk = new Uint8Array(2 * 1024 * 1024);
+      crypto.getRandomValues(chunk.subarray(0, 1024)); // warm crypto entropy
+      const payload = new Blob([chunk], { type: 'application/octet-stream' });
+      const workers = [];
+
+      async function uploadWorker(idx) {
+        while (performance.now() - startTime < durationMs && !abortController.signal.aborted) {
+          if (!navigator.onLine) break;
+          try {
+            const reqStart = performance.now();
+            await fetch(`${BENCHMARK_CONFIG.uploadEndpoint}?cb=${Date.now()}_${idx}`, {
+              method: 'POST',
+              body: payload,
+              mode: 'no-cors',
+              cache: 'no-store',
+              signal: abortController.signal
+            });
+            const reqTime = performance.now() - reqStart;
+            if (reqTime > 0) {
+              totalBytesUploaded += payload.size;
+            }
+          } catch (err) {
+            await new Promise(r => setTimeout(r, 100));
+          }
+        }
+      }
+
+      for (let i = 0; i < 3; i++) workers.push(uploadWorker(i));
+
+      while (performance.now() - startTime < durationMs && !abortController.signal.aborted) {
+        await new Promise(r => setTimeout(r, 50));
+        const elapsedSec = (performance.now() - startTime) / 1000;
+        if (elapsedSec > 0.2) {
+          const rawMbps = (totalBytesUploaded * 8) / (elapsedSec * 1000000);
+          smoothedSpeed = smoothedSpeed === 0 ? rawMbps : (smoothedSpeed * 0.7 + rawMbps * 0.3);
+          onUpdate({
+            speed: smoothedSpeed,
+            progress: Math.min(100, Math.round((elapsedSec / (durationMs / 1000)) * 100))
+          });
+        }
+      }
+      await Promise.allSettled(workers);
+      return { final: smoothedSpeed };
+    }
+
+    /* Orchestrator */
+    async function startSpeedTest() {
+      if (!navigator.onLine) {
+        showToast("Error: No internet connection detected.");
+        return;
+      }
+
+      if (isTesting) {
+        if (abortController) abortController.abort();
+        resetTestState();
+        statusMsg.textContent = 'Benchmark stopped by user.';
+        return;
+      }
+
+      isTesting = true;
+      abortController = new AbortController();
+
+      btnText.textContent = 'STOP TEST';
+      btnIcon.classList.remove('hidden');
+      startTestBtn.classList.replace('bg-accent', 'bg-red-600');
+      startTestBtn.classList.replace('shadow-accent/20', 'shadow-red-600/20');
+      liveBadge.textContent = 'RUNNING';
+
+      // Reset values
+      document.getElementById('downloadSummaryValue').textContent = '--';
+      document.getElementById('uploadSummaryValue').textContent = '--';
+      document.getElementById('pingValue').textContent = '--';
+      document.getElementById('jitterValue').textContent = '--';
+      centerSpeedValue.textContent = '0.0';
+      progressPercent.textContent = '0%';
+      targetGaugeValue = 0;
+      dynamicGaugeCeiling = 100;
+      resetBandwidthGraph();
+
+      try {
+        /* Phase 1: Latency & Jitter */
+        phaseIndicator.textContent = 'PING / JITTER';
+        statusMsg.textContent = 'Probing latency roundtrips...';
+        const pingStats = await measurePingAndJitter(5);
+        if (abortController.signal.aborted) return;
+        
+        document.getElementById('pingValue').textContent = pingStats.ping.toFixed(0);
+        document.getElementById('jitterValue').textContent = pingStats.jitter.toFixed(1);
+        sound.playTone(520, 0.08);
+
+        /* Phase 2: Download */
+        phaseIndicator.textContent = 'DOWNLOAD';
+        statusMsg.textContent = 'Measuring download throughput...';
+        const dnResult = await measureDownloadSpeed(BENCHMARK_CONFIG.testDurationMs, (metrics) => {
+          centerSpeedValue.textContent = metrics.speed.toFixed(1);
+          document.getElementById('downloadSummaryValue').textContent = metrics.speed.toFixed(1);
+          progressPercent.textContent = `${metrics.progress}%`;
+          targetGaugeValue = metrics.speed;
+          addGraphPoint(metrics.speed);
+        });
+        if (abortController.signal.aborted) return;
+        document.getElementById('downloadSummaryValue').textContent = dnResult.final.toFixed(1);
+        sound.playTone(650, 0.12);
+
+        /* Phase 3: Upload */
+        phaseIndicator.textContent = 'UPLOAD';
+        statusMsg.textContent = 'Measuring upload throughput...';
+        resetBandwidthGraph();
+        const upResult = await measureUploadSpeed(BENCHMARK_CONFIG.testDurationMs, (metrics) => {
+          centerSpeedValue.textContent = metrics.speed.toFixed(1);
+          document.getElementById('uploadSummaryValue').textContent = metrics.speed.toFixed(1);
+          progressPercent.textContent = `${metrics.progress}%`;
+          targetGaugeValue = metrics.speed;
+          addGraphPoint(metrics.speed);
+        });
+        if (abortController.signal.aborted) return;
+        document.getElementById('uploadSummaryValue').textContent = upResult.final.toFixed(1);
+        sound.playTone(780, 0.15);
+
+        /* Final Verdict */
+        phaseIndicator.textContent = 'FINISHED';
+        progressPercent.textContent = '100%';
+        targetGaugeValue = 0;
+        statusMsg.textContent = 'Test completed successfully.';
+        liveBadge.textContent = 'COMPLETE';
+
+        let rating = "Fair";
+        let desc = "Sufficient for casual browsing and standard definition video.";
+        if (dnResult.final >= 100) {
+          rating = "Gigabit / Ultra";
+          desc = "Excellent! Suitable for simultaneous 4K streams, cloud backups, and competitive online gaming.";
+        } else if (dnResult.final >= 40) {
+          rating = "High Speed";
+          desc = "Great connection. Ready for multi-device 4K streaming and low-latency video calls.";
+        } else if (dnResult.final < 15) {
+          rating = "Low Speed";
+          desc = "Bandwidth may bottleneck on multi-device networks or during high-definition streaming.";
+        }
+
+        document.getElementById('verdictRating').textContent = rating;
+        document.getElementById('verdictDescription').textContent = desc;
+
+        saveHistoryEntry({
+          date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          ping: pingStats.ping.toFixed(0) + ' ms',
+          download: dnResult.final.toFixed(1),
+          upload: upResult.final.toFixed(1),
+          rating: rating
+        });
+        showToast('Benchmark complete!');
+
+      } catch (err) {
+        statusMsg.textContent = 'Benchmark canceled or interrupted.';
+      } finally {
+        resetTestState();
+      }
+    }
+
+    function resetTestState() {
+      isTesting = false;
+      btnText.textContent = 'START TEST';
+      btnIcon.classList.add('hidden');
+      startTestBtn.classList.replace('bg-red-600', 'bg-accent');
+      startTestBtn.classList.replace('shadow-red-600/20', 'shadow-accent/20');
+      liveBadge.textContent = 'STANDBY';
+    }
+
+    startTestBtn.addEventListener('click', startSpeedTest);
+
+    /* Storage & History Management */
+    function saveHistoryEntry(entry) {
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('netspeed_logs')) || []; } catch(e){}
+      logs.unshift(entry);
+      if (logs.length > 15) logs.pop();
+      localStorage.setItem('netspeed_logs', JSON.stringify(logs));
+      renderHistoryTable();
+    }
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById('historyTableBody');
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('netspeed_logs')) || []; } catch(e){}
+
+      if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-textGray italic">No benchmark logs recorded yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = logs.map(item => `
+        <tr class="hover:bg-cardBg/80 transition">
+          <td class="py-2.5 px-2 text-white font-mono text-[11px]">${item.date}</td>
+          <td class="py-2.5 px-2 text-textGray font-mono">${item.ping || '--'}</td>
+          <td class="py-2.5 px-2 font-mono font-medium text-white">${item.download} <span class="text-textGray text-[10px]">Mbps</span></td>
+          <td class="py-2.5 px-2 font-mono font-medium text-white">${item.upload} <span class="text-textGray text-[10px]">Mbps</span></td>
+          <td class="py-2.5 px-2 text-accent font-medium">${item.rating}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+      localStorage.removeItem('netspeed_logs');
+      renderHistoryTable();
+      showToast('Logs cleared.');
+    });
+
+    document.getElementById('exportCsvBtn').addEventListener('click', () => {
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('netspeed_logs')) || []; } catch(e){}
+      if (logs.length === 0) {
+        showToast('No logs to export.');
+        return;
+      }
+      let csv = 'Time,Ping,Download(Mbps),Upload(Mbps),Rating\n';
+      logs.forEach(l => {
+        csv += `"${l.date}","${l.ping}","${l.download}","${l.upload}","${l.rating}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `netspeed_logs_${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    renderHistoryTable();
+  </script>
+</body>
+</html>
